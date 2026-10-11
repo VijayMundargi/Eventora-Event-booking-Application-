@@ -67,3 +67,15 @@ export const healthCheckLimiter = rateLimit({
         message: "Too many requests. Please try again after 15 minutes.",
     }
 });
+
+export const createEventLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 5,
+    standardHeaders: "draft-8",
+    legacyHeaders: false,
+    store: createStore("rl:createEvent:"),
+    message: {
+        success: false,
+        message: "Too many requests. Please try again after 15 minutes.",
+    }
+});

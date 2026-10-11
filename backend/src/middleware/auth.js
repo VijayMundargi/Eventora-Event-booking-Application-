@@ -1,5 +1,4 @@
 import jwt from "jsonwebtoken"
-import userModel from "../models/user.model.js"
 import ApiError from "../utils/ApiError.js";
 import { ENV } from "../config/ENV.js";
 import userModel from "../models/user.model.js";

@@ -28,6 +28,9 @@ const startServer = async() =>{
         logger.error(`Failed to start server`, {
             error: error.message
         })
+
+        console.log(error);
+        
     }
 }
 

@@ -12,11 +12,11 @@ const app = express();
 
 const corsOption = {
     origin: 'http://localhost:5173',
-    method: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
     maxAge: 86400,
-    optionSuccessStatus: 200
+    optionsSuccessStatus: 200
 }
 
 app.use(helmet());
@@ -24,12 +24,12 @@ app.use(cors(corsOption));
 
 
 
-app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({extended:true, limit: "1mb"}));
 
 
 //routes
-app.use("api", globalLimiter)
+app.use("/api", globalLimiter)
 app.use(healthCheck);
 app.use("/api/auth",authRoutes);
 app.use("/api/event", eventRoutes);

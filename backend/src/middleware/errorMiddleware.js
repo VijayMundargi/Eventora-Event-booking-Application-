@@ -9,6 +9,8 @@ const errorMiddleware = (err, req, res, next) => {
         statusCode,
         method: req.method,
         path: req.originalUrl,
+        ip: req.ip,
+        stack: err.stack,
     });
 
     return res.status(statusCode).json({
