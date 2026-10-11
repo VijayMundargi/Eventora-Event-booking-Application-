@@ -5,4 +5,6 @@ export const ENV = {
     PORT: process.env.PORT,
     JWT_SECREAT: process.env.JWT_SECREAT,
     MONGO_URI: process.env.MONGO_URI,
+    EMAIL_USER: process.env.EMAIL_USER,
+    EMAIL_PASS: process.env.EMAIL_PASS,
 }

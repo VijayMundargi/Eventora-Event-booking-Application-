@@ -1,18 +1,23 @@
-import mongoose from "mongoose"
-import {ENV} from "./ENV.js"
 
+import mongoose from "mongoose";
+import logger from "../utils/Logger.js";
+import { ENV } from "./ENV.js";
 
-const connectDb = async() => {
+const connectDb = async () => {
     try {
         await mongoose.connect(ENV.MONGO_URI);
-        console.log(`database connected succefully!!`);
-        
+
+        logger.info("Database connected successfully!", {
+            database: mongoose.connection.name,
+            host: mongoose.connection.host,
+        });
     } catch (error) {
-        console.log(`database error `, error);
-        
+        logger.error("Failed to connect to database", {
+            error: error.message,
+        });
+
         process.exit(1);
     }
-}
+};
 
-
-export default connectDb
+export default connectDb;

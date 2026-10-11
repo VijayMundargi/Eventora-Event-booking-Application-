@@ -1,12 +1,12 @@
+
 import winston from "winston";
-import path from "path";
-import { fileURLToPath } from "url";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
-const logFile = path.resolve(__dirname, "app.log");
+const logFile = path.resolve(__dirname, "../../app.log");
 
 const customLevels = {
     levels: {
@@ -14,7 +14,7 @@ const customLevels = {
         error: 1,
         warn: 2,
         info: 3,
-        debug: 4
+        debug: 4,
     },
 
     colors: {
@@ -22,15 +22,15 @@ const customLevels = {
         error: "red",
         warn: "yellow",
         info: "green",
-        debug: "blue"
-    }
+        debug: "blue",
+    },
 };
 
 winston.addColors(customLevels.colors);
 
 const logFormat = winston.format.combine(
     winston.format.timestamp({
-        format: "YYYY-MM-DD HH:mm:ss"
+        format: "YYYY-MM-DD HH:mm:ss",
     }),
     winston.format.printf(({ timestamp, level, message }) => {
         return `${timestamp} [${level.toUpperCase()}] ${message}`;
@@ -45,21 +45,15 @@ const logger = winston.createLogger({
         new winston.transports.Console({
             format: winston.format.combine(
                 winston.format.colorize(),
-                winston.format.timestamp({
-                    format: "YYYY-MM-DD HH:mm:ss"
-                }),
-                winston.format.printf(
-                    ({ timestamp, level, message }) =>
-                        `${timestamp} [${level}] ${message}`
-                )
-            )
+                logFormat
+            ),
         }),
 
         new winston.transports.File({
             filename: logFile,
-            format: logFormat
-        })
-    ]
+            format: logFormat,
+        }),
+    ],
 });
 
 export default logger;
