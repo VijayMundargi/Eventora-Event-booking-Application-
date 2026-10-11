@@ -1,59 +1,22 @@
-
-import winston from "winston";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const logFile = path.resolve(__dirname, "../../app.log");
-
-const customLevels = {
-    levels: {
-        critical: 0,
-        error: 1,
-        warn: 2,
-        info: 3,
-        debug: 4,
-    },
-
-    colors: {
-        critical: "red",
-        error: "red",
-        warn: "yellow",
-        info: "green",
-        debug: "blue",
-    },
-};
-
-winston.addColors(customLevels.colors);
-
-const logFormat = winston.format.combine(
-    winston.format.timestamp({
-        format: "YYYY-MM-DD HH:mm:ss",
-    }),
-    winston.format.printf(({ timestamp, level, message }) => {
-        return `${timestamp} [${level.toUpperCase()}] ${message}`;
-    })
-);
+import winston from "winston"
 
 const logger = winston.createLogger({
-    levels: customLevels.levels,
-    level: "info",
-
-    transports: [
-        new winston.transports.Console({
-            format: winston.format.combine(
-                winston.format.colorize(),
-                logFormat
-            ),
-        }),
-
-        new winston.transports.File({
-            filename: logFile,
-            format: logFormat,
-        }),
-    ],
+  level: process.env.NODE_ENV === 'production' ? 'warn' : 'info',
+  format: winston.format.combine(
+    winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+    winston.format.errors({ stack: true }),
+    winston.format.colorize(),
+    winston.format.printf(({ timestamp, level, message, stack }) => {
+      return stack
+        ? `[${timestamp}] ${level}: ${message}\n${stack}`
+        : `[${timestamp}] ${level}: ${message}`;
+    })
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'logs/combined.log' }),
+  ],
 });
 
 export default logger;

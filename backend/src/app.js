@@ -2,8 +2,11 @@ import express from "express"
 import cors from "cors"
 import helmet from "helmet"
 import errorMiddleware from "./middleware/errorMiddleware.js"
-import healthCheck from "./route/healthCheck.route.js"
-import authRoutes from "./route/auth.route.js"
+import healthCheck from "./routes/healthCheck.route.js"
+import authRoutes from "./routes/auth.route.js"
+import eventRoutes from "./routes/event.route.js"
+import bookingRoutes from "./routes/booking.route.js"
+import { globalLimiter } from "./middleware/raterLimite.js"
 
 const app = express();
 
@@ -26,8 +29,11 @@ app.use(express.urlencoded({extended:true}));
 
 
 //routes
+app.use("api", globalLimiter)
 app.use(healthCheck);
-app.use("/api/auth",authRoutes)
+app.use("/api/auth",authRoutes);
+app.use("/api/event", eventRoutes);
+app.use("/api/booking", bookingRoutes);
 
 
 //Global Middleware
