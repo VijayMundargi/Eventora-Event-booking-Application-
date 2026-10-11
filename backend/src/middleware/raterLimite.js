@@ -15,7 +15,7 @@ export const globalLimiter = rateLimit({
     store: createStore("rl:global:"),
     message: {
         success: false,
-        message: "Too many requests. Please try again later",
+        message: "Too many requests. Please try again after 15 minutes.",
     }
 });
 
@@ -28,7 +28,7 @@ export const loginLimiter = rateLimit({
     store: createStore("rl:login:"),
     message: {
         success: false,
-        message: "Too many requests. Please try again later",
+        message: "Too many requests. Please try again after 15 minutes.",
     }
 });
 
@@ -40,7 +40,7 @@ export const registerLimiter = rateLimit({
     store: createStore("rl:register:"),
     message: {
         success: false,
-        message: "Too many requests. Please try again later",
+        message: "Too many requests. Please try again after 15 minutes.",
     }
 });
 
@@ -52,7 +52,7 @@ export const otpLimiter = rateLimit({
     store: createStore("rl:otp:"),
     message: {
         success: false,
-        message: "Too many requests. Please try again later",
+        message: "Too many requests. Please try again after 15 minutes.",
     }
 });
 
@@ -64,6 +64,6 @@ export const healthCheckLimiter = rateLimit({
     store: createStore("rl:health:"),
     message: {
         success: false,
-        message: "Too many requests. Please try again later",
+        message: "Too many requests. Please try again after 15 minutes.",
     }
 });
