@@ -10,21 +10,27 @@ export const getAllEvents = asyncHandler(async(req,res,next) => {
     }
 
     if(req.query.location){
-        filters.location = req.query.location;
-    }
+        filters.location = {
+            $regex: req.query.location,
+            $options: "i"
+        }
+    }   
 
     if(req.query.ticketPrice){
-        filters.ticketPrice = req.query.ticketPrice;
+        filters.ticketPrice = {
+            $lte: Number(req.query.ticketPrice)
+        }
     }
 
     if(req.query.title){
         filters.title = req.query.title;
     }
 
-    const events = await eventModel.find();
+    const events = await eventModel.find(filters);
     res.status(200).json({
         success: true,
-        message: "Events featched successfully"
+        message: "Events featched successfully",
+        events
     })
 })
 
@@ -37,6 +43,12 @@ export const getEventById = asyncHandler(async(req,res,next) => {
         message: "Event not found"
        })
     }
+
+    res.status(200).json({
+        success: true,
+        message: "Event featched successfully!",
+        events,
+    })
 
 })
 
@@ -54,7 +66,8 @@ export const createEvent = asyncHandler(async(req,res,next) => {
         totalSeats, 
         availableSeats, 
         ticketPrice, 
-        imageUrl
+        imageUrl,
+        createdBy: req.user._id,
     })
 
     const createdEvent = {
@@ -68,11 +81,13 @@ export const createEvent = asyncHandler(async(req,res,next) => {
         ticketPrice: event.ticketPrice,
     }
 
-    res.staus(201).json({
+    res.status(201).json({
         success: true,
         message: "Event created successfully!",
        createdEvent,
     })
+
+    
 })
 
 export const updateEvent = asyncHandler(async(req,res,next) => {
@@ -114,17 +129,7 @@ export const updateEvent = asyncHandler(async(req,res,next) => {
 })
 
 export const deleteEvent = asyncHandler(async(req,res,next) => {
-        const { title, description, date, location, category, totalSeats, ticketPrice, imageUrl } = req.body;
-    const event = await eventModel.findByIdAndDelete(req.params.id, {
-        title, 
-        description, 
-        date, 
-        location, 
-        category, 
-        totalSeats, 
-        ticketPrice, 
-        imageUrl
-    }, {new: true});
+    const event = await eventModel.findByIdAndDelete(req.params.id,{new: true});
 
     if(!event){
         return res.status(404).json({

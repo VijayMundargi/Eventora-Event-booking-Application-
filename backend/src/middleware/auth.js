@@ -28,7 +28,7 @@ export const admin = (req,res,next) => {
     if(req.user && req.user.role === 'admin'){
         next();
     } else {
-        return res.staus(403).json({
+        return res.status(403).json({
             success: false,
             message: "Forbidden, admin access required"
         })
